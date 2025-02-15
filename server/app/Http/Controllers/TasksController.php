@@ -59,19 +59,20 @@ class TasksController extends Controller
         }
     }
 
-    function show($id)
+    function getUserTasks()
     {
         try {
-            $Task = Tasks::getTaskByID($id);
+            $userId = Auth::id();
+            $Task = Tasks::getUserTasks($userId);
             return response()->json([
-                'message' => 'Task retrieved By ID successfully',
-                'category' => $Task
+                'message' => 'User Task retrieved successfully',
+                'Tasks' => $Task
             ], 200);
         } catch (Exception $e) {
-            Log::error('Task retrieval by id error: ' . $e->getMessage());
+            Log::error('User Task retrieval error: ' . $e->getMessage());
 
             return response()->json([
-                'error' => 'Failed to retrieve Task by id',
+                'error' => 'Failed to retrieve User Task',
                 'message' => config('app.debug') ? $e->getMessage() : 'Internal Server Error'
             ], 500);
         }
