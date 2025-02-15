@@ -6,7 +6,7 @@ function CustomField({ label, value, className, style }) {
     label: "font-bold text-black mb-1",
     valueContainer: "",
     valueSpan:
-      "inline-block p-2 rounded-md border bg-white shadow-md transition-colors duration-300 hover:bg-white hover:bg-opacity-80 hover:shadow-yellow-500 transition-shadow",
+      "inline-block p-2 rounded-md border bg-white shadow-sm",
   };
 
   return (
@@ -23,7 +23,7 @@ CustomField.propTypes = {
   label: PropTypes.string,
   value: PropTypes.string,
   className: PropTypes.string,
-  style: PropTypes.object, // Define style prop type
+  style: PropTypes.object,
 };
 
 export default CustomField;

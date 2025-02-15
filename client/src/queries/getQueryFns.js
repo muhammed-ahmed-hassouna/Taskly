@@ -1,7 +1,7 @@
 import api from "../configs/api";
 
 // Get All Todos of user
-export async function getTodosUser() {
-    const { data } = await api.get(`/tasks/getUserTask`);
-    return data;
-  }
+export async function getUserTask() {
+  const { data } = await api.get(`/tasks/getUserTask`);
+  return data;
+}
