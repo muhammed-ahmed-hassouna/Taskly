@@ -24,8 +24,11 @@ class UserController extends Controller
             };
             $user = User::register($validatedData);
             $token = $user->createToken('token', ['*'], now()->addHours(6))->plainTextToken;
-
-            return response()->json(['message' => 'User Added Successfully', 'access_token' => $token], 201);
+            return response()->json([
+                'message' => 'User Added Successfully',
+                'access_token' => $token,
+                'role' => 2
+            ], 201);
         } catch (Exception $e) {
             Log::error('Error thorough registration process' . $e->getMessage());
 
@@ -53,7 +56,11 @@ class UserController extends Controller
             $user->tokens->each->delete();
             $token = $user->createToken('token', ['*'], now()->addHours(6))->plainTextToken;
 
-            return response()->json(['message' => 'LoggedIn Successfully', 'access_token' => $token], 200);
+            return response()->json([
+                'message' => 'LoggedIn Successfully',
+                'access_token' => $token,
+                'role' => $user->role_id
+            ], 200);
         } catch (Exception $e) {
             Log::error('Error thorough log in process' . $e->getMessage());
 
@@ -72,14 +79,14 @@ class UserController extends Controller
             if (!$user) {
                 return response()->json(['error' => 'Unauthenticated'], 401);
             }
-           return response()->json([
-            'user' => [
-                'id' => $user->id,
-                'name' => $user->name,
-                'email' => $user->email,
-                'role' => $user->role_id
-            ]
-        ], 200);
+            return response()->json([
+                'user' => [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'role' => $user->role_id
+                ]
+            ], 200);
         } catch (Exception $e) {
             Log::error('Error thorough getting user data process' . $e->getMessage());
 
@@ -89,5 +96,4 @@ class UserController extends Controller
             ], 500);
         }
     }
-
 }

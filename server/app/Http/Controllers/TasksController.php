@@ -28,7 +28,14 @@ class TasksController extends Controller
 
             return response()->json([
                 'message' => 'Task created successfully',
-                'Task' => $task,
+                'Task' => [
+                    'id' => $task->id,
+                    'title' => $task->title,
+                    'description' => $task->description,
+                    'status' => $task->status,
+                    'priority' => $task->priority,
+                    'due_date' => $task->due_date,
+                ],
             ], 201);
         } catch (Exception $e) {
             Log::error('Task creation error: ' . $e->getMessage());
@@ -92,7 +99,14 @@ class TasksController extends Controller
             $updatedTask = Tasks::updateTask($id, $validateData);
             return response()->json([
                 'message' => 'Task Updated successfully',
-                'Task' => $updatedTask
+                'Task' => [
+                    'id' => $updatedTask->id,
+                    'title' => $updatedTask->title,
+                    'description' => $updatedTask->description,
+                    'status' => $updatedTask->status,
+                    'priority' => $updatedTask->priority,
+                    'due_date' => $updatedTask->due_date,
+                ]
             ], 200);
         } catch (Exception $e) {
             Log::error('Task Update error: ' . $e->getMessage());
