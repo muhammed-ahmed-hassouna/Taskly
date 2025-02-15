@@ -16,7 +16,13 @@ class UserController extends Controller
             $validatedData = $request->validate([
                 'name' => 'required|min:3|max:30',
                 'email' => 'required|email|min:3|max:40',
-                'password' => 'required|min:6|max:30',
+                // Password must have 8 characters, with at least 1 number, uppercase, and special character
+                'password' => [
+                    'required',
+                    'min:8',
+                    'max:30',
+                    'regex:/^(?=.*?[A-Z])(?=.*?[0-9])(?=.*?[\!@#$%^&*()\\[\]{}\-_+=~`|:;"\'<>,.?]).{8,}$/',
+                ],
             ]);
 
             if (User::checkEmail($validatedData['email'])) {
@@ -45,7 +51,12 @@ class UserController extends Controller
         try {
             $validated = $req->validate([
                 'email' => 'required|email|min:3|max:40',
-                'password' => 'required|min:6|max:30',
+                'password' => [
+                    'required',
+                    'min:8',
+                    'max:30',
+                    'regex:/^(?=.*?[A-Z])(?=.*?[0-9])(?=.*?[\!@#$%^&*()\\[\]{}\-_+=~`|:;"\'<>,.?]).{8,}$/',
+                ],
             ]);
 
             $user = User::checkEmail($validated['email']);
