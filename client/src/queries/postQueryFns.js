@@ -12,7 +12,6 @@ export async function LogInUser(formData) {
   return data;
 }
 
-// Add Task
 export async function createTask({ createData }) {
   const { data } = await api.post(`/tasks/create`, { ...createData });
   return data;

@@ -9,6 +9,7 @@ import AddTask from "./addTask";
 import { updateTask } from "queries/patchQueryFns";
 import UpdateTask from "./updateTask";
 import ShowDetailsTask from "./showDetailsTask";
+import { deleteTask } from "queries/deleteQueryFns";
 
 const Home = () => {
   const [showAddTask, setShowAddTask] = useState(false);
@@ -45,6 +46,18 @@ const Home = () => {
     },
     onError: (error) => {
       toast.error("Error updating task");
+    },
+  });
+
+  const { mutateAsync: deleteTaskMutate } = useMutation({
+    mutationFn: ({ id }) => deleteTask({ id }),
+    onSuccess: () => {
+      refetch();
+      setShowUpdateTask(false);
+      toast.success("Task deleted successfully!");
+    },
+    onError: (error) => {
+      toast.error("Error deleting task");
     },
   });
 
@@ -88,7 +101,8 @@ const Home = () => {
         handleAddClick={() => setShowAddTask(true)}
         handleUpdateClick={handleUpdateClick}
         handleShowDetails={handleShowDetails}
-      />
+        handleDeleteTask={(id) => deleteTaskMutate({ id })}
+        />
     </>
   );
 };

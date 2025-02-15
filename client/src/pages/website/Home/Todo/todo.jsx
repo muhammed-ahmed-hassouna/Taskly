@@ -15,9 +15,10 @@ const Todo = ({
   handleAddClick,
   handleUpdateClick,
   handleShowDetails,
+  handleDeleteTask,
 }) => {
   const status = {
-    "In progress": { bg: "bg-yellow-100", text: "text-yellow-800"},
+    "In progress": { bg: "bg-yellow-100", text: "text-yellow-800" },
     Completed: { bg: "bg-green-100", text: "text-green-800" },
     Deferred: { bg: "bg-gray-100", text: "text-gray-800" },
     Open: { bg: "bg-blue-100", text: "text-blue-800" },
@@ -57,12 +58,12 @@ const Todo = ({
           {todos?.Tasks?.length > 0 ? (
             todos.Tasks.map((task) => (
               <div
-                key={task._id}
+                key={task?.id}
                 className="flex flex-col p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
               >
                 <div className="flex items-center justify-between">
                   <h3 className="text-lg font-semibold text-gray-800">
-                    {task.title}
+                    {task?.title}
                   </h3>
                   <div className="flex items-center gap-2">
                     <Tooltip title="Details">
@@ -78,7 +79,10 @@ const Todo = ({
                       />
                     </Tooltip>
                     <Tooltip title="Delete">
-                      <FiTrash className="text-gray-500 hover:text-red-600 cursor-pointer transition-colors" />
+                      <FiTrash
+                        onClick={() => handleDeleteTask(task?.id)}
+                        className="text-gray-500 hover:text-red-600 cursor-pointer transition-colors"
+                      />
                     </Tooltip>
                   </div>
                 </div>
@@ -89,7 +93,7 @@ const Todo = ({
                       status[task.status]?.bg
                     } ${status[task.status]?.text}`}
                   >
-                    {status[task.status]?.icon} {task.status}
+                    {status[task.status]?.icon} {task?.status}
                   </span>
 
                   <span
@@ -98,18 +102,18 @@ const Todo = ({
                     }`}
                   >
                     {priority[task.priority]?.icon}
-                    {task.priority}
+                    {task?.priority}
                   </span>
 
                   <span className="text-sm text-gray-500 flex items-center">
-                    📅 {new Date(task.due_date).toLocaleDateString("en-US")}
+                    📅 {new Date(task?.due_date).toLocaleDateString("en-US")}
                   </span>
                 </div>
               </div>
             ))
           ) : (
             <div className="text-center py-8 text-gray-500">
-              No tasks found. Start by creating a new task!
+              No tasks found.
             </div>
           )}
         </div>
