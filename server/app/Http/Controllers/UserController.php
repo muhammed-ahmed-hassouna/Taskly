@@ -6,6 +6,7 @@ use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
 class UserController extends Controller
@@ -90,14 +91,16 @@ class UserController extends Controller
             if (!$user) {
                 return response()->json(['error' => 'Unauthenticated'], 401);
             }
-            return response()->json([
-                'user' => [
+
+            $userData = Cache::remember("user:{$user->id}", 3600, function () use ($user) {
+                return [
                     'id' => $user->id,
                     'name' => $user->name,
                     'email' => $user->email,
                     'role' => $user->role_id
-                ]
-            ], 200);
+                ];
+            });
+            return response()->json(['user' => $userData], 200);
         } catch (Exception $e) {
             Log::error('Error thorough getting user data process' . $e->getMessage());
 

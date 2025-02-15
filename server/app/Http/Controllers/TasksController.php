@@ -7,6 +7,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cache;
 
 class TasksController extends Controller
 {
@@ -25,6 +26,8 @@ class TasksController extends Controller
             $validateData['user_id'] = $user_id;
 
             $task = Tasks::createTask($validateData);
+
+            Cache::forget("user_tasks_{$user_id}");
 
             return response()->json([
                 'message' => 'Task created successfully',
@@ -47,30 +50,14 @@ class TasksController extends Controller
         }
     }
 
-    function index()
-    {
-        try {
-            $Tasks = Tasks::getTasks();
-
-            return response()->json([
-                'message' => 'Tasks retrieved successfully',
-                'Tasks' => $Tasks
-            ], 200);
-        } catch (Exception $e) {
-            Log::error('Tasks retrieval error: ' . $e->getMessage());
-
-            return response()->json([
-                'error' => 'Failed to retrieve Tasks',
-                'message' => config('app.debug') ? $e->getMessage() : 'Internal Server Error'
-            ], 500);
-        }
-    }
-
     function getUserTasks()
     {
         try {
             $userId = Auth::id();
-            $Task = Tasks::getUserTasks($userId);
+
+            $Task = Cache::remember("user_tasks_{$userId}", 3600, function () use ($userId) {
+                return Tasks::getUserTasks($userId);
+            });
             return response()->json([
                 'message' => 'User Task retrieved successfully',
                 'Tasks' => $Task
@@ -97,6 +84,9 @@ class TasksController extends Controller
             ]);
 
             $updatedTask = Tasks::updateTask($id, $validateData);
+
+            Cache::forget("user_tasks_{$updatedTask->user_id}");
+
             return response()->json([
                 'message' => 'Task Updated successfully',
                 'Task' => [
@@ -122,7 +112,10 @@ class TasksController extends Controller
     function destroy($id)
     {
         try {
-            Tasks::DeleteTask($id);
+            $task = Tasks::DeleteTask($id);
+            $user_id = $task->user_id;
+
+            Cache::forget("user_tasks_{$user_id}");
 
             return response()->json([
                 'success' => true,

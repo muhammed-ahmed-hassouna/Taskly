@@ -14,7 +14,7 @@ use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, SoftDeletes;
+    use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -27,7 +27,7 @@ class User extends Authenticatable
         'email',
         'password',
     ];
-    
+
     protected static function checkEmail($email)
     {
         try {

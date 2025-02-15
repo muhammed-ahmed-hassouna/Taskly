@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Tasks;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
 class DashboardController extends Controller
@@ -12,10 +13,13 @@ class DashboardController extends Controller
     public function index()
     {
         try {
-            $task = Tasks::getUsersTasks();
+            $tasks = Cache::remember('dashboard/users_tasks', 3600, function () {
+                return Tasks::getUsersTasks();
+            });
+
             return response()->json([
                 'message' => 'Tasks retrieved successfully',
-                'Tasks' => $task
+                'Tasks' => $tasks
             ], 200);
         } catch (Exception $e) {
             Log::error('User Tasks retrieval error: ' . $e->getMessage());
@@ -40,6 +44,8 @@ class DashboardController extends Controller
             ]);
 
             $task = Tasks::createTask($validated);
+
+            Cache::forget('dashboard/users_tasks');
 
             return response()->json([
                 'message' => 'Tasks assigned successfully',
@@ -68,6 +74,9 @@ class DashboardController extends Controller
             ]);
 
             $task = Tasks::updateTask($taskID, $validatedData);
+
+            Cache::forget('dashboard/users_tasks');
+
             return response()->json([
                 'message' => 'Tasks updated successfully',
                 'Tasks' => $task
@@ -86,6 +95,8 @@ class DashboardController extends Controller
     {
         try {
             Tasks::deleteTask($taskID);
+
+            Cache::forget('dashboard/users_tasks');
 
             return response()->json([
                 'message' => 'Task deleted successfully'
