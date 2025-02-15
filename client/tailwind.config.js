@@ -24,9 +24,10 @@ module.exports = {
       },
       // Colors
       colors: {
-        primary: "#DB4444",
-        button: "#000000",
-        buttonHover: "#E07575",
+        primary: "#dd4130",
+        primary2: "#ecedf4",
+        button: "#dd4130",
+        buttonHover: "#f07769",
         textColor: "#7D8184",
         textColor2: "#000000",
       },
