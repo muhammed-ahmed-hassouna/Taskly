@@ -58,3 +58,28 @@ export const addTaskSchema = yup.object().shape({
     .nullable()
     .min(new Date(), "Due date must be today or later"),
 });
+
+export const updateTaskSchema = yup.object().shape({
+  title: yup
+    .string()
+    .min(3, "Title must be at least 3 characters")
+    .max(255, "Title must be at most 255 characters"),
+
+  description: yup
+    .string()
+    .min(10, "Description must be at least 10 characters")
+    .max(1000, "Description must be at most 1000 characters"),
+
+  status: yup
+    .string()
+    .oneOf(["In progress", "Completed", "Deferred", "Open"], "Invalid status"),
+
+  priority: yup
+    .string()
+    .oneOf(["High", "Medium", "Low"], "Invalid priority"),
+
+  due_date: yup
+    .date()
+    .nullable()
+    .min(new Date(), "Due date must be today or later"),
+});

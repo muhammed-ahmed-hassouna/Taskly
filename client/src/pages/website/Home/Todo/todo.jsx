@@ -2,7 +2,7 @@ import FilledButton from "components/ui/buttons/FilledButton";
 import { FiEdit, FiLogIn, FiPlus, FiTrash } from "react-icons/fi";
 import Tooltip from "@mui/material/Tooltip";
 
-const Todo = ({ todos, handleAddClick }) => {
+const Todo = ({ todos, handleAddClick, handleUpdateClick }) => {
   console.log(todos);
 
   const getStatusColor = (status) => {
@@ -63,7 +63,10 @@ const Todo = ({ todos, handleAddClick }) => {
                 <div>
                   <Tooltip title="Update Task">
                     <span>
-                      <FiEdit className="inline-block mr-2 cursor-pointer text-blue-600 hover:opacity-80" />
+                      <FiEdit
+                        onClick={() => handleUpdateClick(task)}
+                        className="inline-block mr-2 cursor-pointer text-blue-600 hover:opacity-80"
+                      />
                     </span>
                   </Tooltip>
 
