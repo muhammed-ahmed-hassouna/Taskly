@@ -14,7 +14,8 @@ class Tasks extends Model
         'user_id',
         'title',
         'description',
-        'is_completed',
+        'status',
+        'priority',
         'due_date',
     ];
 

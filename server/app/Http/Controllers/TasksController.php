@@ -16,7 +16,8 @@ class TasksController extends Controller
             $validateData = $request->validate([
                 'title' => 'required|string|max:255|min:3',
                 'description' => 'required|string|max:1000|min:10',
-                'is_completed' => 'required|boolean',
+                'status' => 'required|in:In progress,Completed,Deferred,Open',
+                'priority' => 'required|in:High,Medium,Low',
                 'due_date' => 'nullable|date|after_or_equal:today',
             ]);
 
@@ -82,7 +83,8 @@ class TasksController extends Controller
             $validateData = $request->validate([
                 'title' => 'nullable|string|min:3|max:255',
                 'description' => 'nullable|string|min:10|max:1000',
-                'is_completed' => 'nullable|boolean',
+                'status' => 'nullable|in:In progress,Completed,Deferred,Open',
+                'priority' => 'nullable|in:High,Medium,Low',
                 'due_date' => 'nullable|date|after_or_equal:today',
             ]);
 

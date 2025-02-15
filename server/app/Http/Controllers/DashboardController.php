@@ -32,10 +32,11 @@ class DashboardController extends Controller
         try {
             $validated = $request->validate([
                 'user_id'     => 'required|exists:users,id',
-                'title'       => 'required|string|max:255|min:3',
+                'title' => 'required|string|max:255|min:3',
                 'description' => 'required|string|max:1000|min:10',
-                'is_completed' => 'required|boolean',
-                'due_date'    => 'nullable|date',
+                'status' => 'required|in:In progress,Completed,Deferred,Open',
+                'priority' => 'required|in:High,Medium,Low',
+                'due_date' => 'nullable|date|after_or_equal:today',
             ]);
 
             $task = Tasks::createTask($validated);
@@ -59,10 +60,11 @@ class DashboardController extends Controller
         try {
             $validatedData = $request->validate([
                 'user_id'     => 'required|exists:users,id',
-                'title'       => 'nullable|string|max:255',
-                'description' => 'nullable|string',
-                'due_date'    => 'nullable|date',
-                'is_completed' => 'nullable|boolean'
+                'title' => 'nullable|string|min:3|max:255',
+                'description' => 'nullable|string|min:10|max:1000',
+                'status' => 'nullable|in:In progress,Completed,Deferred,Open',
+                'priority' => 'nullable|in:High,Medium,Low',
+                'due_date' => 'nullable|date|after_or_equal:today',
             ]);
 
             $task = Tasks::updateTask($taskID, $validatedData);
