@@ -22,7 +22,7 @@ export default function CustomTextarea({
 }) {
   const disabledClass = isDisable ? "bg-secondary_4" : "bg-secondary_5";
   const focusClass = withFocus
-    ? "focus:outline-primary_1 transition-all duration-200"
+    ? "focus:outline-primary_1 transition-all duration-100"
     : "outline-none";
   const shapeClass = SHAPE_STYLES[shape] || 2;
 
