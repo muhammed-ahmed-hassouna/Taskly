@@ -26,6 +26,7 @@ module.exports = {
       colors: {
         primary: "#dd4130",
         primary2: "#ecedf4",
+        primary3: "#F2F2F2",
         button: "#dd4130",
         buttonHover: "#f07769",
         textColor: "#7D8184",
