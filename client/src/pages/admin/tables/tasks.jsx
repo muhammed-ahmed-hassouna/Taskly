@@ -173,9 +173,13 @@ const TaskManager = () => {
                       size="sm"
                       value={task?.status}
                       className={`capitalize ${
-                        task.status === "completed"
+                        task.status === "Completed"
                           ? "bg-green-100 text-green-700"
-                          : "bg-amber-100 text-amber-700"
+                          : task.status === "In progress"
+                          ? "bg-yellow-100 text-yellow-700"
+                          : task.status === "Deferred"
+                          ? "bg-gray-100 text-gray-700"
+                          : "bg-blue-100 text-blue-700"
                       }`}
                     />
                   </td>
@@ -185,11 +189,11 @@ const TaskManager = () => {
                       size="sm"
                       value={task?.priority}
                       className={`capitalize ${
-                        task.priority === "high"
-                          ? "bg-red-100 text-red-700"
-                          : task.priority === "medium"
-                          ? "bg-yellow-100 text-yellow-700"
-                          : "bg-blue-100 text-blue-700"
+                        task.priority === "High"
+                          ? "bg-red-100 text-red-600"
+                          : task.priority === "Medium"
+                          ? "bg-orange-100 text-orange-600"
+                          : "bg-green-100 text-green-600"
                       }`}
                     />
                   </td>
