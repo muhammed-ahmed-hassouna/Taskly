@@ -34,7 +34,8 @@ class UserController extends Controller
             return response()->json([
                 'message' => 'User Added Successfully',
                 'access_token' => $token,
-                'role' => 2
+                'role' => 2,
+                'id' => $user->id,
             ], 201);
         } catch (Exception $e) {
             Log::error('Error thorough registration process' . $e->getMessage());
@@ -71,7 +72,8 @@ class UserController extends Controller
             return response()->json([
                 'message' => 'LoggedIn Successfully',
                 'access_token' => $token,
-                'role' => $user->role_id
+                'role' => $user->role_id,
+                'id' => $user->id,
             ], 200);
         } catch (Exception $e) {
             Log::error('Error thorough log in process' . $e->getMessage());

@@ -24,8 +24,8 @@ const Login = () => {
   const mutation = useMutation({
     mutationFn: LogInUser,
     onSuccess: (data) => {
-      const { access_token, role } = data || {};
-      Cookies.set("userData", JSON.stringify({ access_token, role }));
+      const { access_token, role, id } = data || {};
+      Cookies.set("userData", JSON.stringify({ access_token, role, id }));
       setIsLog(true);
       navigate("/");
       toast.success("Successful Log In !", { position: "top-right" });

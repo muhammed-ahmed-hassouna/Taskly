@@ -1,16 +1,17 @@
-import { Link } from "react-router-dom";
-import { usePublicContext } from "../../../providers/PublicContextProvider";
-import { deleteUserCookies } from "../../../utils/methods";
-import { toast, ToastContainer } from "react-toastify";
+import { Link, useNavigate } from "react-router-dom";
+import { usePublicContext } from "providers/PublicContextProvider";
+import { deleteUserCookies } from "utils/methods";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const TopNav = () => {
   const { isLog } = usePublicContext();
+  const navigate = useNavigate();
 
   const handleLogout = () => {
     deleteUserCookies();
     toast.success("Logged out successfully!");
-    window.location.reload();
+    navigate('/login')
   };
 
   // Array containing navigation items
