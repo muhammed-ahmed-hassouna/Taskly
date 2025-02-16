@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\TaskNotification;
 use App\Models\Tasks;
 use Exception;
 use Illuminate\Http\Request;
@@ -13,7 +14,7 @@ class DashboardController extends Controller
     public function index()
     {
         try {
-            $tasks = Cache::remember('dashboard/users_tasks', 3600, function () {
+            $tasks = Cache::remember('users_tasks', 3600, function () {
                 return Tasks::getUsersTasks();
             });
 
@@ -34,7 +35,7 @@ class DashboardController extends Controller
     public function assignTask(Request $request)
     {
         try {
-            $validated = $request->validate([
+            $validatedData = $request->validate([
                 'user_id'     => 'required|exists:users,id',
                 'title' => 'required|string|max:255|min:3',
                 'description' => 'required|string|max:1000|min:10',
@@ -43,9 +44,11 @@ class DashboardController extends Controller
                 'due_date' => 'nullable|date|after_or_equal:today',
             ]);
 
-            $task = Tasks::createTask($validated);
+            $task = Tasks::createTask($validatedData);
 
-            Cache::forget('dashboard/users_tasks');
+            Cache::forget("user_tasks_{$validatedData['user_id']}");
+
+            event(new TaskNotification($validatedData['user_id'], 'assigned', $task));
 
             return response()->json([
                 'message' => 'Tasks assigned successfully',
@@ -75,7 +78,8 @@ class DashboardController extends Controller
 
             $task = Tasks::updateTask($taskID, $validatedData);
 
-            Cache::forget('dashboard/users_tasks');
+            Cache::forget("user_tasks_{$validatedData['user_id']}");
+            event(new TaskNotification($validatedData['user_id'], 'updated', $task));
 
             return response()->json([
                 'message' => 'Tasks updated successfully',
@@ -94,9 +98,12 @@ class DashboardController extends Controller
     public function deleteTask($taskID)
     {
         try {
-            Tasks::deleteTask($taskID);
 
-            Cache::forget('dashboard/users_tasks');
+            $task = Tasks::findOrFail($taskID);
+            event(new TaskNotification($task->user_id, 'deleted', $task));
+            Tasks::deleteTask($taskID);
+            
+            Cache::forget("user_tasks_{$task->user_id}");
 
             return response()->json([
                 'message' => 'Task deleted successfully'

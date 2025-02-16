@@ -112,8 +112,10 @@ class TasksController extends Controller
     function destroy($id)
     {
         try {
-            $task = Tasks::DeleteTask($id);
+            $task = Tasks::findOrFail($id);
             $user_id = $task->user_id;
+
+            Tasks::DeleteTask($id);
 
             Cache::forget("user_tasks_{$user_id}");
 
