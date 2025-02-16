@@ -1,3 +1,4 @@
+import { useState } from "react";
 import FilledButton from "components/ui/buttons/FilledButton";
 import {
   FiEdit,
@@ -17,6 +18,14 @@ const Todo = ({
   handleShowDetails,
   handleDeleteTask,
 }) => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 4;
+
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedTasks = todos?.Tasks?.slice(startIndex, endIndex) || [];
+  const totalPages = Math.ceil((todos?.Tasks?.length || 0) / itemsPerPage);
+
   const status = {
     "In progress": { bg: "bg-yellow-100", text: "text-yellow-800" },
     Completed: { bg: "bg-green-100", text: "text-green-800" },
@@ -55,8 +64,8 @@ const Todo = ({
         </div>
 
         <div className="space-y-3">
-          {todos?.Tasks?.length > 0 ? (
-            todos.Tasks.map((task) => (
+          {paginatedTasks.length > 0 ? (
+            paginatedTasks.map((task) => (
               <div
                 key={task?.id}
                 className="flex flex-col p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
@@ -117,6 +126,35 @@ const Todo = ({
             </div>
           )}
         </div>
+
+        {/* Pagination Controls */}
+        {todos?.Tasks?.length > 0 && (
+          <div className="flex items-center justify-between mt-6 pt-4 border-t border-gray-200">
+            <span className="text-sm text-gray-600">
+              Page {currentPage} of {totalPages}
+            </span>
+            <div className="flex gap-2">
+              <button
+                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                disabled={currentPage === 1}
+                className={`bg-primary hover:bg-opacity-80 text-white px-4 py-2 rounded-lg transition-colors ${
+                  currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""
+                }`}
+              >
+                Previous
+              </button>
+              <button
+                onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                disabled={currentPage === totalPages}
+                className={`bg-primary hover:bg-opacity-80 text-white px-4 py-2 rounded-lg transition-colors ${
+                  currentPage === totalPages ? "opacity-50 cursor-not-allowed" : ""
+                }`}
+              >
+                Next
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
