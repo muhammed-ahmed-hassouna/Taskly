@@ -14,11 +14,13 @@ import { toast } from "react-toastify";
 import FilledButton from "components/ui/buttons/FilledButton";
 import { signUpUser } from "queries/postQueryFns";
 import { signUpSchema } from "utils/forms-schemas";
+import { useAuth } from "providers/AuthContext";
 
 const SignUp = () => {
   const [passwordMode, setPasswordMode] = useState(true);
   const { setIsLog } = usePublicContext();
   const navigate = useNavigate();
+  const { setUser } = useAuth();
 
   const mutation = useMutation({
     mutationFn: signUpUser,
@@ -26,6 +28,7 @@ const SignUp = () => {
       const { access_token, role, id } = data || {};
       Cookies.set("userData", JSON.stringify({ access_token, role, id }));
       setIsLog(true);
+      setUser(getUserCookies());
       navigate("/");
       toast.success("Sign Up Successful!", { position: "top-right" });
     },

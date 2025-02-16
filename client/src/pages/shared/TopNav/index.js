@@ -3,13 +3,16 @@ import { usePublicContext } from "providers/PublicContextProvider";
 import { deleteUserCookies } from "utils/methods";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useAuth } from "providers/AuthContext";
 
 const TopNav = () => {
   const { isLog } = usePublicContext();
   const navigate = useNavigate();
+  const { setUser } = useAuth();
 
   const handleLogout = () => {
     deleteUserCookies();
+    setUser(null);
     toast.success("Logged out successfully!");
     navigate('/login')
   };

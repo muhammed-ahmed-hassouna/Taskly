@@ -9,17 +9,21 @@ import AuthProvider from "providers/AuthProvider";
 import TopNav from "./shared/TopNav";
 import Dashboard from "./admin/dashboard";
 import ProtectedRoute from "providers/ProtectedRoute";
+import { useAuth } from "providers/AuthContext";
+
 export default function Index() {
+  const { user } = useAuth();
+  const showTopNav = user?.role === 2;
+
   return (
     <>
       <ScrollToTop />
-      <TopNav />
+      {showTopNav && <TopNav />}
       <Routes>
         <Route index path="/login" element={<Login />} />
         <Route index path="/signup" element={<SignUp />} />
 
         <Route element={<AuthProvider />}>
-        
           <Route element={<ProtectedRoute allowedRoles={[2]} />}>
             <Route index path="/" element={<Home />} />
           </Route>

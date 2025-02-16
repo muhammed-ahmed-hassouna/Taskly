@@ -15,11 +15,13 @@ import FilledButton from "components/ui/buttons/FilledButton";
 import { loginSchema } from "utils/forms-schemas";
 import { LogInUser } from "queries/postQueryFns";
 import { Link } from "react-router-dom";
+import { useAuth } from 'providers/AuthContext';
 
 const Login = () => {
   const [passwordMode, setPasswordMode] = useState(true);
   const { setIsLog } = usePublicContext();
   const navigate = useNavigate();
+  const { setUser } = useAuth();
 
   const mutation = useMutation({
     mutationFn: LogInUser,
@@ -27,6 +29,7 @@ const Login = () => {
       const { access_token, role, id } = data || {};
       Cookies.set("userData", JSON.stringify({ access_token, role, id }));
       setIsLog(true);
+      setUser(getUserCookies());
       if (role === 1) {
         navigate("/dashboard");
       } else {
