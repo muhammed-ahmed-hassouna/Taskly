@@ -84,7 +84,7 @@ class Tasks extends Model
     protected static function getUserTasks($userId)
     {
         try {
-            return self::where('user_id', $userId)->get();
+            return self::where('user_id', $userId)->with('user')->get();
         } catch (Exception $e) {
             throw $e;
         }
