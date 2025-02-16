@@ -74,9 +74,7 @@ export const updateTaskSchema = yup.object().shape({
     .string()
     .oneOf(["In progress", "Completed", "Deferred", "Open"], "Invalid status"),
 
-  priority: yup
-    .string()
-    .oneOf(["High", "Medium", "Low"], "Invalid priority"),
+  priority: yup.string().oneOf(["High", "Medium", "Low"], "Invalid priority"),
 
   due_date: yup
     .date()
