@@ -3,6 +3,7 @@ import { useNavigate, Outlet } from "react-router-dom";
 import Loader from "components/ui/Loader/Loader";
 import { getUserCookies, deleteUserCookies } from "../utils/methods";
 import { usePublicContext } from "./PublicContextProvider";
+import Notifications from "pages/shared/Notifications/Notifications";
 
 const useAuthProvider = () => {
   const { isLog } = usePublicContext();
@@ -22,7 +23,16 @@ const useAuthProvider = () => {
     return () => clearTimeout(loadingDelay);
   }, [userData, isLog, navigate]);
 
-  return loading ? <Loader /> : <Outlet />;
+  if (loading) {
+    return <Loader />;
+  }
+
+  return (
+    <>
+      <Outlet />
+      <Notifications userId={userData.id} />
+    </>
+  );
 };
 
 export default useAuthProvider;
