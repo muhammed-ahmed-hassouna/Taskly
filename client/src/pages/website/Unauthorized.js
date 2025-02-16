@@ -6,9 +6,9 @@ export default function UnAuthorized() {
   const userRole = user?.role;
 
   const getRedirectPath = () => {
-    if (userRole === "user") {
+    if (userRole === 2) {
       return "/";
-    } else if (userRole === "admin") {
+    } else if (userRole === 1) {
       return "/dashboard";
     } else {
       return "/signup";
@@ -48,9 +48,9 @@ export default function UnAuthorized() {
               className="w-1/2 px-5 py-2 text-sm tracking-wide text-white transition-colors duration-200 bg-primary rounded-lg shrink-0 sm:w-auto hover:bg-buttonFocus dark:hover:bg-primary dark:bg-buttonFocus"
             >
               Go back to{" "}
-              {userRole === "User"
+              {userRole === 2
                 ? "user"
-                : userRole === "Admin"
+                : userRole === 1
                 ? "admin"
                 : "LogIn"}{" "}
               page

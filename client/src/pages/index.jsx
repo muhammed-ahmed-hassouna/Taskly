@@ -7,6 +7,8 @@ import Login from "pages/website/Auth/Login";
 import SignUp from "pages/website/Auth/Signup";
 import AuthProvider from "providers/AuthProvider";
 import TopNav from "./shared/TopNav";
+import Dashboard from "./admin/dashboard";
+import ProtectedRoute from "providers/ProtectedRoute";
 export default function Index() {
   return (
     <>
@@ -17,7 +19,14 @@ export default function Index() {
         <Route index path="/signup" element={<SignUp />} />
 
         <Route element={<AuthProvider />}>
-          <Route index path="/" element={<Home />} />
+        
+          <Route element={<ProtectedRoute allowedRoles={[2]} />}>
+            <Route index path="/" element={<Home />} />
+          </Route>
+
+          <Route element={<ProtectedRoute allowedRoles={[1]} />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+          </Route>
         </Route>
 
         <Route path="/unauthorized" element={<UnAuthorized />} />

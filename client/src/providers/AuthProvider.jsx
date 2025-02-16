@@ -13,7 +13,7 @@ const useAuthProvider = () => {
 
   useEffect(() => {
     const loadingDelay = setTimeout(() => {
-      if (!userData || userData.role !== 2 || !isLog) {
+      if (!userData || (userData.role !== 2 && userData.role !== 1) || !isLog) {
         deleteUserCookies();
         navigate("/unauthorized", { replace: true });
       }

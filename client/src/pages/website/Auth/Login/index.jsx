@@ -27,7 +27,11 @@ const Login = () => {
       const { access_token, role, id } = data || {};
       Cookies.set("userData", JSON.stringify({ access_token, role, id }));
       setIsLog(true);
-      navigate("/");
+      if (role === 1) {
+        navigate("/dashboard");
+      } else {
+        navigate("/");
+      }
       toast.success("Successful Log In !", { position: "top-right" });
     },
     onError: (error) => {
