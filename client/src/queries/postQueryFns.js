@@ -16,3 +16,9 @@ export async function createTask({ createData }) {
   const { data } = await api.post(`/tasks/create`, { ...createData });
   return data;
 }
+
+export async function assignTask(newTask) {
+  console.log('Payload:', newTask);
+  const { data } = await api.post(`/dashboard/assignTask`, newTask);
+  return data;
+}

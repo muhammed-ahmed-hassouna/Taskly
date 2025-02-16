@@ -5,3 +5,8 @@ export async function deleteTask({id}) {
     return data;
   }
   
+export async function dsDeleteTask(id) {
+    const { data } = await api.delete(`/dashboard/deleteTask/${id}`);
+    return data;
+  }
+  
