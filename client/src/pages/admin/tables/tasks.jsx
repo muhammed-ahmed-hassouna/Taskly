@@ -1,7 +1,5 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useFormik } from "formik";
-import * as Yup from "yup";
 import { PencilIcon, TrashIcon, PlusIcon } from "@heroicons/react/24/solid";
 import {
   Card,
@@ -11,27 +9,11 @@ import {
   CardBody,
   Chip,
   CardFooter,
-  IconButton,
   Tooltip,
-  Dialog,
-  DialogHeader,
-  DialogBody,
-  DialogFooter,
-  Input,
-  Select,
-  Option,
 } from "@material-tailwind/react";
 import { toast } from "react-toastify";
 import { getUsersTask } from "queries/getQueryFns";
-import { motion, AnimatePresence } from "framer-motion";
-import Label from "components/ui/custom-inputs/Label";
-import ErrorFormik from "components/ui/ErrorFormik";
-import CustomInput from "components/ui/custom-inputs/CustomInput";
-import CustomTextarea from "components/ui/custom-inputs/CustomTextarea";
-import FilledButton from "components/ui/buttons/FilledButton";
-import { FiSave } from "react-icons/fi";
 import { assignTask } from "queries/postQueryFns";
-import { addTaskSchema } from "utils/forms-schemas";
 import { dsUpdateTask } from "queries/patchQueryFns";
 import { dsDeleteTask } from "queries/deleteQueryFns";
 import AssignTask from "../forms/assignTask";
@@ -40,7 +22,9 @@ import UpdateTaskForm from "../forms/udateTask";
 const TaskManager = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedTask, setSelectedTask] = useState(null);
-  const [openDialog, setOpenDialog] = useState(false);
+  const [showAddFrom, setShowAddFrom] = useState(false);
+  const [showUpdateFrom, setShowUpdateFrom] = useState(false);
+
   const itemsPerPage = 5;
   const queryClient = useQueryClient();
 
@@ -64,7 +48,7 @@ const TaskManager = () => {
     onSuccess: () => {
       queryClient.invalidateQueries(["dashboard"]);
       toast.success("Task created successfully");
-      handleDialogClose();
+      handleAddClose();
     },
   });
 
@@ -73,7 +57,7 @@ const TaskManager = () => {
     onSuccess: () => {
       queryClient.invalidateQueries(["dashboard"]);
       toast.success("Task updated successfully");
-      handleDialogClose();
+      handleUpdateClose();
     },
   });
 
@@ -85,13 +69,23 @@ const TaskManager = () => {
     },
   });
 
-  const handleDialogOpen = (task = null) => {
+  const handleAddOpen = (task = null) => {
     setSelectedTask(task);
-    setOpenDialog(true);
+    setShowAddFrom(true);
   };
 
-  const handleDialogClose = () => {
-    setOpenDialog(false);
+  const handleUpdateOpen = (task = null) => {
+    setSelectedTask(task);
+    setShowUpdateFrom(true);
+  };
+
+  const handleAddClose = () => {
+    setShowAddFrom(false);
+    setSelectedTask(null);
+  };
+
+  const handleUpdateClose = () => {
+    setShowUpdateFrom(false);
     setSelectedTask(null);
   };
   const users = [
@@ -121,7 +115,7 @@ const TaskManager = () => {
           <Button
             className="flex items-center gap-3 bg-primary hover:bg-buttonHover"
             size="sm"
-            onClick={() => handleDialogOpen()}
+            onClick={() => handleAddOpen()}
           >
             <PlusIcon className="h-4 w-4" /> Add Task
           </Button>
@@ -209,7 +203,7 @@ const TaskManager = () => {
                       <Tooltip content="Edit Task">
                         <button
                           variant="text"
-                          onClick={() => handleDialogOpen(task)}
+                          onClick={() => handleUpdateOpen(task)}
                         >
                           <PencilIcon className="w-5 h-5 text-blue-500" />
                         </button>
@@ -255,19 +249,18 @@ const TaskManager = () => {
         </div>
       </CardFooter>
 
-      {/* Task Dialog */}
-      {openDialog && (
+      {showAddFrom && (
         <AssignTask
-          onCancel={() => handleDialogClose()}
+          onCancel={() => handleAddClose()}
           onSave={(data) => createMutation.mutate(data)}
           users={users}
         />
       )}
 
-      {openDialog && (
+      {showUpdateFrom && (
         <UpdateTaskForm
           data={selectedTask}
-          onCancel={() => handleDialogClose()}
+          onCancel={() => handleUpdateClose()}
           onSave={(data) =>
             updateMutation.mutate({ id: selectedTask.id, updatedTask: data })
           }
