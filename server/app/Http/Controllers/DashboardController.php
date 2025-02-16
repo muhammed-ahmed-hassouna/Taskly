@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Events\TaskNotification;
 use App\Models\Tasks;
+use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -32,6 +33,26 @@ class DashboardController extends Controller
         }
     }
 
+    public function getAllUsers()
+    {
+        try {
+
+            $users = User::getAllUsers();
+
+            return response()->json([
+                'message' => 'Users retrieved successfully',
+                'Users' => $users
+            ], 200);
+        } catch (Exception $e) {
+            Log::error('Users retrieval error: ' . $e->getMessage());
+
+            return response()->json([
+                'error' => 'Failed to retrieve Users',
+                'message' => config('app.debug') ? $e->getMessage() : 'Internal Server Error'
+            ], 500);
+        }
+    }
+
     public function assignTask(Request $request)
     {
         try {
@@ -46,6 +67,7 @@ class DashboardController extends Controller
 
             $task = Tasks::createTask($validatedData);
 
+            Cache::forget('users_tasks');
             Cache::forget("user_tasks_{$validatedData['user_id']}");
 
             event(new TaskNotification($validatedData['user_id'], 'assigned', $task));
@@ -102,7 +124,7 @@ class DashboardController extends Controller
             $task = Tasks::findOrFail($taskID);
             event(new TaskNotification($task->user_id, 'deleted', $task));
             Tasks::deleteTask($taskID);
-            
+
             Cache::forget("user_tasks_{$task->user_id}");
 
             return response()->json([

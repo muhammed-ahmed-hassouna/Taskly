@@ -56,6 +56,14 @@ class User extends Authenticatable
         }
     }
 
+    protected static function getAllUsers()
+    {
+        try {
+            return self::get();
+        } catch (Exception $e) {
+            throw $e;
+        }
+    }
     protected static function getUserByID($id)
     {
         try {
