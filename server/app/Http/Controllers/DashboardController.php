@@ -66,7 +66,7 @@ class DashboardController extends Controller
             ]);
 
             $task = Tasks::createTask($validatedData);
-
+            
             Cache::forget('users_tasks');
             Cache::forget("user_tasks_{$validatedData['user_id']}");
 
@@ -100,6 +100,7 @@ class DashboardController extends Controller
 
             $task = Tasks::updateTask($taskID, $validatedData);
 
+            Cache::forget('users_tasks');
             Cache::forget("user_tasks_{$validatedData['user_id']}");
             event(new TaskNotification($validatedData['user_id'], 'updated', $task));
 
@@ -125,6 +126,7 @@ class DashboardController extends Controller
             event(new TaskNotification($task->user_id, 'deleted', $task));
             Tasks::deleteTask($taskID);
 
+            Cache::forget('users_tasks');
             Cache::forget("user_tasks_{$task->user_id}");
 
             return response()->json([
